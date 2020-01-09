@@ -4,6 +4,8 @@ import data from '../data/subreddits'
 import SubredditItem from './SubredditItem'
 
 class Search extends React.Component {
+
+
     render() {
         return (
             <View>

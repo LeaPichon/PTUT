@@ -10,8 +10,10 @@
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.5",
     "expo": "~36.0.0",
+    "mathjs": "^6.5.0",
     "neo4j-driver": "^4.0.1",
     "react": "~16.9.0",
+    "react-boxplot": "^3.1.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-chart-kit": "^4.3.0",
