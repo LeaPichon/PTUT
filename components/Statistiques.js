@@ -30,13 +30,11 @@ class Statistiques extends React.Component {
                   <View style={styles.box}>
                     <Text style={styles.title}>Bilan Statistique</Text>
                     <Text style={styles.subtitle}>Moyenne : [...] liens par subreddit</Text>
-                    <Text style={styles.subtitle}>Quantiles :</Text>
-
-                    <Text style={styles.info}>Max : [...]</Text>
-                    <Text style={styles.info}>Q1 : [...]</Text>
-                    <Text style={styles.info}>Médiane : [...]</Text>
-                    <Text style={styles.info}>Q3 : [...]</Text>
-                    <Text style={styles.info}>Min : [...]</Text>
+                    <Text style={styles.subtitle}>Max : [...]</Text>
+                    <Text style={styles.subtitle}>Q1 : 25% des subreddits ont moins de [...] liens </Text>
+                    <Text style={styles.subtitle}>Médiane : 50% des subreddits ont moins de [...] liens </Text>
+                    <Text style={styles.subtitle}>Q3 : 25% des subreddits ont plus de [...] liens </Text>
+                    <Text style={styles.subtitle}>Min : [...]</Text>
                   </View>
                   <View style={styles.box}>
                     <Text style={styles.title}>Les plus ou moins liés</Text>

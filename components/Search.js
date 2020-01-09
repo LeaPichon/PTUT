@@ -12,6 +12,7 @@ class Search extends React.Component {
         this.state = {
             searchTerm: ''
         }
+
     }
 
     searchUpdated(term) {
@@ -23,6 +24,7 @@ class Search extends React.Component {
         return (
             <View>
                 <SearchInput style={styles.textinput} placeholder='Nom du Subreddit' onChangeText={(term) => { this.searchUpdated(term) }}/>
+                <Button color='#ff4500' title='Enlever le subreddit le plus lié' onPress={() => {}}/>
                 <Text style={styles.title}>Liste des Subreddits</Text>
                 <ScrollView>
                     {filteredSubreddits.map(subreddit => {
