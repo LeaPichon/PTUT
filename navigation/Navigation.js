@@ -6,6 +6,7 @@ import Search from '../components/Search'
 import Details from '../components/Details'
 import Statistiques from '../components/Statistiques'
 
+// Page de recherche, ou l'écran principal
 class SearchScreen extends React.Component {
   render() {
     return (
@@ -14,6 +15,7 @@ class SearchScreen extends React.Component {
   }
 }
 
+// Page des statistiques 
 class StatisticsScreen extends React.Component {
   render() {
     return (
@@ -22,6 +24,7 @@ class StatisticsScreen extends React.Component {
   }
 }
 
+// Page de détails d'un subreddit
 class DetailsScreen extends React.Component {
   render() {
     return (
@@ -30,6 +33,8 @@ class DetailsScreen extends React.Component {
   }
 }
 
+// StackNavigator qui permet d'ouvrir la page Détails
+// depuis la page Recherche
 const SearchStack = createStackNavigator(
   {
     Recherche: { screen: SearchScreen },
@@ -43,6 +48,8 @@ const SearchStack = createStackNavigator(
   }
 );
 
+// AppContainer qui contient le TabNavigator qui permet de naviguer 
+// entre la page Recherche et la page Statistiques
 export default createAppContainer(createBottomTabNavigator(
   {
     Recherche: { screen: SearchStack },

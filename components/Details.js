@@ -2,6 +2,8 @@ import React from 'react'
 import { StyleSheet, Image, View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import subreddits from '../data/subreddits'
 
+// Page de détails d'un subreddit
+
 class Details extends React.Component {
   constructor(props) {
     super(props);
@@ -11,23 +13,33 @@ class Details extends React.Component {
     return (
       <View style={styles.main_container}>
         <View style={styles.title_container}>
-          <Image style={styles.imageTop} source={require('../assets/reddit.png')}/>
-          <Text style={styles.title}>{ this.props.navigation.getParam('subreddit')._fields.properties.name }</Text>
+          {/* Source de l'image (logo de reddit) */}
+          <Image style={styles.imageTop} source={require('../assets/reddit.png')}/> 
+          {/* Récupération du nom du subreddit */}
+          <Text style={styles.title}>{ this.props.navigation.getParam('subreddit')._fields.properties.name }</Text> 
         </View>
+
+        {/* Partie de statistiques sur les liens du subreddit */}
         <View style={styles.content_container}>
           <Text style={styles.subtitle}>Nombre de liens entrant : [...]</Text>
           <Text style={styles.subtitle}>Nombre de liens sortant : [...]</Text>
           <Text style={styles.subtitle}>Nombre de liens total : [...]</Text>
         </View>
+
+        {/* Liste des subreddits reliés à celui actif */}
         <View style={styles.content_container}>
           <Text style={styles.subtitle}>Subreddits liés : </Text>
           <ScrollView>
+            {/* Lien vers les autres subreddits. TouchableOpacity permet de mettre en transparence 
+                le nom du subreddit lorsque que l'on clique dessus */}
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', { subreddit: subreddit })}>
               <View style={styles.subreddit_container}>
-                  <Image style={styles.image} source={require('../assets/reddit.png')}/>
-                  <View style={styles.name_container}>
-                      <Text style={styles.name}>{this.props.navigation.getParam('subreddit')._fields.properties.name}</Text>
-                  </View>
+                {/* Lien vers l'image (logo de reddit) */}
+                <Image style={styles.image} source={require('../assets/reddit.png')}/>
+                <View style={styles.name_container}>
+                  {/* Nom du subreddit */}
+                  <Text style={styles.name}>{this.props.navigation.getParam('subreddit')._fields.properties.name}</Text>
+                </View>
               </View>
             </TouchableOpacity>
           </ScrollView>

@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
 
+// Définition des données exemples des subreddits
 const barData = [0, 10, 15, 17, 25, 100, 150, 200, 250, 300]
 
 const barData1 = { 
@@ -21,12 +22,17 @@ const barData4 = {
   datasets: [{ data: [0, 10, 15, 17, 25]}]
 }
 
+// Page des statistiques
+
 class Statistiques extends React.Component {
     render() {
         return (
             <React.Fragment>
               <ScrollView style={styles.main_container}>
                 <View>
+
+                  {/* Partie du bilan statistique */}
+
                   <View style={styles.box}>
                     <Text style={styles.title}>Bilan Statistique</Text>
                     <Text style={styles.subtitle}>Moyenne : [...] liens par subreddit</Text>
@@ -36,9 +42,14 @@ class Statistiques extends React.Component {
                     <Text style={styles.subtitle}>Q3 : 25% des subreddits ont plus de [...] liens </Text>
                     <Text style={styles.subtitle}>Min : [...]</Text>
                   </View>
+
+                  {/* Partie avec les graphes */}
+
                   <View style={styles.box}>
                     <Text style={styles.title}>Les plus ou moins liés</Text>
                     <Text style={styles.subtitle}>Subreddits les plus liés</Text>
+
+                    {/* Graphe pour montrer les subreddits les plus liés */}
                     <BarChart 
                       style={styles.chart}
                       data={barData1}
@@ -59,6 +70,8 @@ class Statistiques extends React.Component {
                       }}
                     />
                     <Text style={styles.subtitle}>Subreddits les moins liés</Text>
+                    
+                    {/* Graphe pour montrer les subreddits les moins liés */}
                     <BarChart 
                       style={styles.chart}
                       data={barData2}
@@ -82,6 +95,8 @@ class Statistiques extends React.Component {
                   <View style={styles.box}>
                     <Text style={styles.title}>Le nombre de liens</Text>
                     <Text style={styles.subtitle}>Subreddits avec le plus de liens entrant</Text>
+                    
+                    {/* Graphe pour montrer les subreddits avec le plus de liens entrant */}
                     <BarChart 
                       style={styles.chart}
                       data={barData3}
@@ -102,6 +117,8 @@ class Statistiques extends React.Component {
                       }}
                     />
                     <Text style={styles.subtitle}>Subreddits avec le plus de liens sortant</Text>
+                    
+                    {/* Graphe pour montrer les subreddits avec le plus de liens sortant */}
                     <BarChart 
                       style={styles.chart}
                       data={barData4}
@@ -145,15 +162,13 @@ const styles = StyleSheet.create ({
         fontSize: 20,
         marginLeft: 15,
         marginTop: 10,
-        flexDirection: 'column',
-        //padding: 10
+        flexDirection: 'column'
     },
     
     info: {
       fontSize: 15,
       marginLeft: 15,
-      flexDirection: 'column',
-      //padding: 10
+      flexDirection: 'column'
   },
 
     chart: {
