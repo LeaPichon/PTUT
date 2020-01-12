@@ -25,6 +25,58 @@ const barData4 = {
 // Page des statistiques
 
 class Statistiques extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      moyenne: '',
+      moy: '',
+      min: '',
+      max: ''
+    }
+  }
+
+  // Fonction qui permet de récupérer les statistiques depuis l'API
+  componentDidMount() {
+    fetch('http://134.209.90.92:3200/subreddit/link/average/', {
+      method: 'GET',
+    })
+    .then(response => response.json())
+    .then(json => {
+      this.setState({
+        moyenne: json.payload
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+    fetch('http://134.209.90.92:3200/subreddit/link/min/', {
+      method: 'GET',
+    })
+    .then(response => response.json())
+    .then(json => {
+      this.setState({
+        min: json.payload,
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+    fetch('http://134.209.90.92:3200/subreddit/link/max/', {
+      method: 'GET',
+    })
+    .then(response => response.json())
+    .then(json => {
+      this.setState({
+        max: json.payload
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
     render() {
         return (
             <React.Fragment>
@@ -35,12 +87,12 @@ class Statistiques extends React.Component {
 
                   <View style={styles.box}>
                     <Text style={styles.title}>Bilan Statistique</Text>
-                    <Text style={styles.subtitle}>Moyenne : [...] liens par subreddit</Text>
-                    <Text style={styles.subtitle}>Max : [...]</Text>
+                    <Text style={styles.subtitle}>Moyenne : {this.state.moyenne} liens par subreddit</Text>
+                    <Text style={styles.subtitle}>Max : {this.state.max} </Text>
                     <Text style={styles.subtitle}>Q1 : 25% des subreddits ont moins de [...] liens </Text>
                     <Text style={styles.subtitle}>Médiane : 50% des subreddits ont moins de [...] liens </Text>
                     <Text style={styles.subtitle}>Q3 : 25% des subreddits ont plus de [...] liens </Text>
-                    <Text style={styles.subtitle}>Min : [...]</Text>
+                    <Text style={styles.subtitle}>Min : {this.state.min} </Text>
                   </View>
 
                   {/* Partie avec les graphes */}

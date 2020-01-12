@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, Image, Button, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text, ScrollView, Image, Button, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native'
 import SearchInput, { createFilter } from 'react-native-search-filter';
-import subreddits from '../data/subreddits'
+import { getSubreddits } from '../data/API'
 
-const KEY_TO_FILTER = '_fields.properties.name';
+const KEY_TO_FILTER = '_fields[0]';
 
 class Search extends React.Component {
 
@@ -11,9 +11,14 @@ class Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchTerm: ''
+            searchTerm: '',
+            filteredItem: []
         }
 
+    }
+
+    _loadSubreddits() {
+        getSubreddits('league').then(data => console.log(data))
     }
 
     // Fonction qui réévalue la variable searchTerm
@@ -21,36 +26,62 @@ class Search extends React.Component {
         this.setState({ searchTerm: term })
     }
 
+    
+    
+    // Fonction qui récupère les subreddits de l'API
+    async componentDidMount() {
+        const response = await fetch('http://134.209.90.92:3200/subreddit/', {method: 'GET',});
+        if (!response.ok) {
+            throw Error(response.statusText);
+        }
+        const json = await response.json();
+        console.log("Réponse de l'API :" + response);
+        this.setState({
+                    isLoading: false,
+                    filteredItem: json.records
+                    //.filter(createFilter(this.state.searchTerm, KEY_TO_FILTER)),
+
+                }, function () {
+        }).catch((error) => {
+                console.error(error);
+            });
+    }
+
     render() {
+        // Affiche  lorsque ça charge
+        if (this.state.isLoading) {
+            return (
+                <View style={{ flex: 1, padding: 20 }}>
+                    <ActivityIndicator/>
+                </View>
+            )
+        }
         // Filtre des subreddits sur le paramètre défini dans la variable KEY_TO_FILTER (le nom), en fonction
         // du texte renseigné dans la variable searchTerm
-        const filteredSubreddits = subreddits.filter(createFilter(this.state.searchTerm, KEY_TO_FILTER))
+        //const filteredSubreddits = 
+        //filteredItem.filter(createFilter(this.state.searchTerm, KEY_TO_FILTER)),
+        const filteredSubreddits = this.state.filteredItem.filter(createFilter(this.state.searchTerm, KEY_TO_FILTER))
+        //console.log("Les subreddits :" + filteredSubreddits);
         return (
             <View>
                 {/* Barre de recherche, bouton pour enlever le 1er subreddit et titre de la liste */}
                 <SearchInput style={styles.textinput} placeholder='Nom du Subreddit' onChangeText={(term) => { this.searchUpdated(term) }}/>
-                <Button color='#ff4500' title='Enlever le subreddit le plus lié' onPress={() => {}}/>
+                <Button color='#ff4500' title='Enlever le subreddit le plus lié' onPress={() => this._loadSubreddits()}/>
                 <Text style={styles.title}>Liste des Subreddits</Text>
-
-                <ScrollView>
-                    {/* Sert à filtrer la liste les subreddits affichés en fonction du nom tapé dans la barre de recherche */}
-                    {filteredSubreddits.map(subreddit => {
-                        return (
-                        /* Lien vers les autres subreddits. TouchableOpacity permet de mettre en transparence 
-                            le nom du subreddit lorsque que l'on clique dessus */
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', { subreddit: subreddit })}>
-                            <View style={styles.subreddit_container}>
-                                {/* Lien vers l'image (logo de reddit) */}
-                                <Image style={styles.image} source={require('../assets/reddit.png')}/>
-                                <View style={styles.name_container}>
-                                    {/* Nom du subreddit */}
-                                    <Text style={styles.name}>{subreddit._fields.properties.name}</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                        )
-                    })}
-                </ScrollView>
+                <FlatList
+                    data={filteredSubreddits}
+                    keyExtractor={(item) => item._fields[0].toString()}
+                    renderItem={({item}) => <View style={styles.subreddit_container}>
+                                                {/* Lien vers l'image (logo de reddit) */}
+                                                <Image style={styles.image} source={require('../assets/reddit.png')}/>
+                                                <View style={styles.name_container}>
+                                                    {/* Nom du subreddit */}
+                                                    {/*console.log("test name : " + item._fields[0])*/}
+                                                    <Text style={styles.name}>{item._fields[0]}</Text>
+                                                </View>
+                                            </View>}
+                />
+                
             </View>
         )
     }
