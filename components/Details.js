@@ -1,6 +1,5 @@
 import React from 'react'
 import { StyleSheet, Image, View, Text, ScrollView, TouchableOpacity } from 'react-native'
-import subreddits from '../data/subreddits'
 
 // Page de détails d'un subreddit
 
@@ -16,7 +15,7 @@ class Details extends React.Component {
           {/* Source de l'image (logo de reddit) */}
           <Image style={styles.imageTop} source={require('../assets/reddit.png')}/> 
           {/* Récupération du nom du subreddit */}
-          <Text style={styles.title}>{ this.props.navigation.getParam('subreddit')._fields.properties.name }</Text> 
+          <Text style={styles.title}>{ this.props.navigation.getParam('subreddit')._fields[0] }</Text> 
         </View>
 
         {/* Partie de statistiques sur les liens du subreddit */}

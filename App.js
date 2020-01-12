@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import Navigation from './navigation/Navigation'
 import Title from './components/Title'
 import { StyleSheet, View } from 'react-native'

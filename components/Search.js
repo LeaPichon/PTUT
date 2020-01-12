@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, Image, Button, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native'
+import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native'
 import SearchInput, { createFilter } from 'react-native-search-filter';
-import { getSubreddits } from '../data/API'
+import { getSubredditsWithSearch } from '../data/API'
 
 const KEY_TO_FILTER = '_fields[0]';
 
@@ -12,21 +12,23 @@ class Search extends React.Component {
         super(props);
         this.state = {
             searchTerm: '',
-            filteredItem: []
+            subreddits: []
         }
-
     }
 
+    // Fonction qui récupère les subreddits en fonction du texte tapé
     _loadSubreddits() {
-        getSubreddits('league').then(data => console.log(data))
+        if (this.state.searchedText.length > 0) { // Seulement si le texte recherché n'est pas vide
+            getSubredditsWithSearch(this.state.searchedText).then(data => {
+                this.setState({ subreddits: data.results })
+            })
+        }
     }
 
     // Fonction qui réévalue la variable searchTerm
     searchUpdated(term) {
         this.setState({ searchTerm: term })
     }
-
-    
     
     // Fonction qui récupère les subreddits de l'API
     async componentDidMount() {
@@ -60,28 +62,19 @@ class Search extends React.Component {
         // du texte renseigné dans la variable searchTerm
         //const filteredSubreddits = 
         //filteredItem.filter(createFilter(this.state.searchTerm, KEY_TO_FILTER)),
-        const filteredSubreddits = this.state.filteredItem.filter(createFilter(this.state.searchTerm, KEY_TO_FILTER))
-        //console.log("Les subreddits :" + filteredSubreddits);
+        const filteredSubreddits = this.state.filteredItem
+        //.filter(createFilter(this.state.searchTerm, KEY_TO_FILTER))
+        console.log("Les subreddits :" + filteredSubreddits);
         return (
             <View>
                 {/* Barre de recherche, bouton pour enlever le 1er subreddit et titre de la liste */}
                 <SearchInput style={styles.textinput} placeholder='Nom du Subreddit' onChangeText={(term) => { this.searchUpdated(term) }}/>
-                <Button color='#ff4500' title='Enlever le subreddit le plus lié' onPress={() => this._loadSubreddits()}/>
                 <Text style={styles.title}>Liste des Subreddits</Text>
                 <FlatList
-                    data={filteredSubreddits}
+                    data={this.state.subreddits}
                     keyExtractor={(item) => item._fields[0].toString()}
-                    renderItem={({item}) => <View style={styles.subreddit_container}>
-                                                {/* Lien vers l'image (logo de reddit) */}
-                                                <Image style={styles.image} source={require('../assets/reddit.png')}/>
-                                                <View style={styles.name_container}>
-                                                    {/* Nom du subreddit */}
-                                                    {/*console.log("test name : " + item._fields[0])*/}
-                                                    <Text style={styles.name}>{item._fields[0]}</Text>
-                                                </View>
-                                            </View>}
+                    renderItem={({item}) => <SubredditItem subreddit={item}/>}
                 />
-                
             </View>
         )
     }
@@ -102,27 +95,6 @@ const styles = StyleSheet.create ({
         marginLeft: 10,
         marginTop: 10,
         fontWeight: 'bold'
-    },
-    image: {
-        width: 30,
-        height: 30,
-        margin: 5
-    },
-    name_container: {
-        flex: 1,
-        margin: 5
-    },
-    name: {
-        fontSize: 18,
-        flex: 1,
-        flexWrap: 'wrap',
-        paddingRight: 5
-    },
-    subreddit_container: {
-        height: 45,
-        flexDirection: 'row',
-        marginLeft: 10,
-        marginTop: 5
     }
 })
 

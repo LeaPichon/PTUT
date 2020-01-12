@@ -1,26 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, ScrollView, Button } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
+import top5ByTotalLinks from '../data/top5byTotalLinks'
 
-// Définition des données exemples des subreddits
-const barData = [0, 10, 15, 17, 25, 100, 150, 200, 250, 300]
-
-const barData1 = { 
-  labels: ['SubR 1', 'SubR 2', 'SubR 3', 'SubR 4', 'SubR 5'],
-  datasets: [{ data: [300, 250, 200, 150, 100]}]
-}
-const barData2 = { 
-  labels: ['SubR 1', 'SubR 2', 'SubR 3', 'SubR 4', 'SubR 5'],
-  datasets: [{ data: [0, 10, 15, 17, 25]}]
-}
-const barData3 = { 
-  labels: ['SubR 1', 'SubR 2', 'SubR 3', 'SubR 4', 'SubR 5'],
-  datasets: [{ data: [300, 250, 200, 150, 100]}]
-}
-const barData4 = { 
-  labels: ['SubR 1', 'SubR 2', 'SubR 3', 'SubR 4', 'SubR 5'],
-  datasets: [{ data: [0, 10, 15, 17, 25]}]
-}
+// Définition des données des subreddits pour les graphes
+var labelsTotal = []
+var linksTotal = []
+const barTotal = {}
 
 // Page des statistiques
 
@@ -29,14 +15,15 @@ class Statistiques extends React.Component {
     super();
     this.state = {
       moyenne: '',
-      moy: '',
       min: '',
-      max: ''
+      max: '',
+      total: []
     }
   }
 
   // Fonction qui permet de récupérer les statistiques depuis l'API
   componentDidMount() {
+    // Permet de récupérer la moyenne
     fetch('http://134.209.90.92:3200/subreddit/link/average/', {
       method: 'GET',
     })
@@ -50,6 +37,7 @@ class Statistiques extends React.Component {
       console.error(error);
     });
 
+    // Permet de récupérer le min
     fetch('http://134.209.90.92:3200/subreddit/link/min/', {
       method: 'GET',
     })
@@ -63,6 +51,7 @@ class Statistiques extends React.Component {
       console.error(error);
     });
 
+    // Permet de récupérer le max
     fetch('http://134.209.90.92:3200/subreddit/link/max/', {
       method: 'GET',
     })
@@ -75,41 +64,55 @@ class Statistiques extends React.Component {
     .catch(error => {
       console.error(error);
     });
-}
+
+    // Permet de récupérer le max MARCHE PAS ? 
+    fetch('http://134.209.90.92:3200/subreddit/top5byTotalLinks', {
+      method: 'GET',
+    })
+    .then(response => response.json())
+    .then(json => {
+      this.setState({
+        total: json.payload
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
 
     render() {
         return (
             <React.Fragment>
               <ScrollView style={styles.main_container}>
                 <View>
-
+                  {console.log("subR: " + this.state.total)}
                   {/* Partie du bilan statistique */}
 
                   <View style={styles.box}>
                     <Text style={styles.title}>Bilan Statistique</Text>
                     <Text style={styles.subtitle}>Moyenne : {this.state.moyenne} liens par subreddit</Text>
                     <Text style={styles.subtitle}>Max : {this.state.max} </Text>
-                    <Text style={styles.subtitle}>Q1 : 25% des subreddits ont moins de [...] liens </Text>
-                    <Text style={styles.subtitle}>Médiane : 50% des subreddits ont moins de [...] liens </Text>
-                    <Text style={styles.subtitle}>Q3 : 25% des subreddits ont plus de [...] liens </Text>
                     <Text style={styles.subtitle}>Min : {this.state.min} </Text>
+                  </View>
+                  <View style={styles.box}>
+                    <Button color='#ff4500' title='Enlever le subreddit le plus lié' onPress={() => {}}/>
                   </View>
 
                   {/* Partie avec les graphes */}
 
                   <View style={styles.box}>
-                    <Text style={styles.title}>Les plus ou moins liés</Text>
-                    <Text style={styles.subtitle}>Subreddits les plus liés</Text>
+                    <Text style={styles.title}>Subreddits les plus liés</Text>
 
                     {/* Graphe pour montrer les subreddits les plus liés */}
                     <BarChart 
                       style={styles.chart}
-                      data={barData1}
+                      data={this.state.barTotal}
                       width={Dimensions.get('window').width-10}
-                      height={220}
-                      yAxisLabel={'Liens : '}
+                      height={300}
+                      verticalLabelRotation={30}
                       chartConfig={{
-                        backgroundColor: '#000000',
+                        backgroundColor: '#336699',
                         backgroundGradientFrom: '#336699',
                         backgroundGradientFromOpacity: 100,
                         fillShadowGradient: '#f0F0F0',
@@ -121,62 +124,40 @@ class Statistiques extends React.Component {
                         }
                       }}
                     />
-                    <Text style={styles.subtitle}>Subreddits les moins liés</Text>
-                    
-                    {/* Graphe pour montrer les subreddits les moins liés */}
-                    <BarChart 
-                      style={styles.chart}
-                      data={barData2}
-                      width={Dimensions.get('window').width-10}
-                      height={220}
-                      yAxisLabel={'Liens : '}
-                      chartConfig={{
-                        backgroundColor: '#000000',
-                        backgroundGradientFrom: '#336699',
-                        backgroundGradientFromOpacity: 100,
-                        fillShadowGradient: '#f0F0F0',
-                        fillShadowGradientOpacity: 100,
-                        decimalPlaces: 0,
-                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                          borderRadius: 16,
-                        }
-                      }}
-                    />
                   </View>
                   <View style={styles.box}>
-                    <Text style={styles.title}>Le nombre de liens</Text>
-                    <Text style={styles.subtitle}>Subreddits avec le plus de liens entrant</Text>
+                    <Text style={styles.title}>Subreddits avec le plus de liens entrant</Text>
                     
                     {/* Graphe pour montrer les subreddits avec le plus de liens entrant */}
                     <BarChart 
                       style={styles.chart}
-                      data={barData3}
+                      data={barTotal}
                       width={Dimensions.get('window').width-10}
-                      height={220}
-                      yAxisLabel={'Liens : '}
+                      height={300}
+                      verticalLabelRotation={30}
                       chartConfig={{
-                        backgroundColor: '#000000',
+                        backgroundColor: '#336699',
                         backgroundGradientFrom: '#336699',
                         backgroundGradientFromOpacity: 100,
-                        fillShadowGradient: '#f0F0F0',
+                        fillShadowGradient: '#F0F0F0',
                         fillShadowGradientOpacity: 100,
                         decimalPlaces: 0,
+                        padding: 10,
                         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                         style: {
                           borderRadius: 16,
                         }
                       }}
                     />
-                    <Text style={styles.subtitle}>Subreddits avec le plus de liens sortant</Text>
+                    <Text style={styles.title}>Subreddits avec le plus de liens sortant</Text>
                     
                     {/* Graphe pour montrer les subreddits avec le plus de liens sortant */}
                     <BarChart 
                       style={styles.chart}
-                      data={barData4}
+                      data={barTotal}
                       width={Dimensions.get('window').width-10}
-                      height={220}
-                      yAxisLabel={'Liens : '}
+                      height={300}
+                      verticalLabelRotation={30}
                       chartConfig={{
                         backgroundColor: '#000000',
                         backgroundGradientFrom: '#336699',
@@ -213,6 +194,7 @@ const styles = StyleSheet.create ({
     subtitle: {
         fontSize: 20,
         marginLeft: 15,
+        marginRight: 15,
         marginTop: 10,
         flexDirection: 'column'
     },
