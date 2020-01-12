@@ -32,17 +32,14 @@ class Search extends React.Component {
     
     // Fonction qui récupère les subreddits de l'API
     async componentDidMount() {
-        const response = await fetch('http://134.209.90.92:3200/subreddit/', {method: 'GET',});
+        const response = await fetch('http://134.209.90.92:3200/subreddit/', {method: 'GET'});
         if (!response.ok) {
             throw Error(response.statusText);
         }
         const json = await response.json();
-        console.log("Réponse de l'API :" + response);
         this.setState({
                     isLoading: false,
-                    filteredItem: json.records
-                    //.filter(createFilter(this.state.searchTerm, KEY_TO_FILTER)),
-
+                    filteredItem: json
                 }, function () {
         }).catch((error) => {
                 console.error(error);
