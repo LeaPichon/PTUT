@@ -9,12 +9,6 @@ import {
   ActivityIndicator
 } from "react-native";
 import { BarChart } from "react-native-chart-kit";
-import top5ByTotalLinks from "../data/top5byTotalLinks";
-
-// Définition des données des subreddits pour les graphes
-var labelsTotal = [];
-var linksTotal = [];
-const barTotal = {};
 
 // Page des statistiques
 
@@ -68,7 +62,7 @@ class Statistiques extends React.Component {
         console.error(error);
       });
 
-    // Permet de récupérer le max MARCHE PAS ?
+    // Permet de récupérer le top 5 des subreddits par nombre total de liens
     fetch("http://134.209.90.92:3200/subreddit/top5byTotalLinks", {
       method: "GET"
     })
@@ -91,10 +85,62 @@ class Statistiques extends React.Component {
       .catch(error => {
         console.error(error);
       });
+
+    // Permet de récupérer le top 5 des subreddits par nombre de liens entrant
+    fetch("http://134.209.90.92:3200/subreddit/top5byIncomingLinks", {
+      method: "GET"
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        this.setState({
+          incoming: {
+            labels: json.payload.map(subreddit => subreddit.name),
+            datasets: [
+              {
+                data: json.payload.map(
+                  subreddit =>
+                    subreddit.incomingLinkCount
+                )
+              }
+            ]
+          }
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    // Permet de récupérer le top 5 des subreddits par nombre de liens sortant
+    fetch("http://134.209.90.92:3200/subreddit/top5byOutgoingLinks", {
+      method: "GET"
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        this.setState({
+          outgoing: {
+            labels: json.payload.map(subreddit => subreddit.name),
+            datasets: [
+              {
+                data: json.payload.map(
+                  subreddit =>
+                    subreddit.outgoingLinkCount
+                )
+              }
+            ]
+          }
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 
   render() {
     const { total } = this.state;
+    const { incoming } = this.state;
+    const { outgoing } = this.state;
 
     return (
       <React.Fragment>
@@ -149,16 +195,16 @@ class Statistiques extends React.Component {
               )}
             </View>
             {/* TODO virer le false et faire les autre graphs*/}
-            {false && (
               <View style={styles.box}>
                 <Text style={styles.title}>
                   Subreddits avec le plus de liens entrant
                 </Text>
 
                 {/* Graphe pour montrer les subreddits avec le plus de liens entrant */}
+                {incoming ? (
                 <BarChart
                   style={styles.chart}
-                  data={barTotal}
+                  data={incoming}
                   width={Dimensions.get("window").width - 10}
                   height={300}
                   verticalLabelRotation={30}
@@ -176,14 +222,18 @@ class Statistiques extends React.Component {
                     }
                   }}
                 />
+                ) : (
+                  <ActivityIndicator size="large" color="#0000ff" />
+                )}
                 <Text style={styles.title}>
                   Subreddits avec le plus de liens sortant
                 </Text>
 
                 {/* Graphe pour montrer les subreddits avec le plus de liens sortant */}
+                {outgoing ? (
                 <BarChart
                   style={styles.chart}
-                  data={barTotal}
+                  data={outgoing}
                   width={Dimensions.get("window").width - 10}
                   height={300}
                   verticalLabelRotation={30}
@@ -200,8 +250,10 @@ class Statistiques extends React.Component {
                     }
                   }}
                 />
+                ) : (
+                  <ActivityIndicator size="large" color="#0000ff" />
+                )}
               </View>
-            )}
           </View>
         </ScrollView>
       </React.Fragment>
