@@ -9,6 +9,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import { BarChart } from "react-native-chart-kit";
+
 // Page des statistiques
 
 class Statistiques extends React.Component {
@@ -111,7 +112,7 @@ class Statistiques extends React.Component {
         console.error(error);
       });
 
-      // Permet de récupérer le top 5 des subreddits par nombre de liens sortant
+    // Permet de récupérer le top 5 des subreddits par nombre de liens sortant
     fetch("http://134.209.90.92:3200/subreddit/top5byOutgoingLinks", {
       method: "GET"
     })
