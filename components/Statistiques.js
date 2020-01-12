@@ -15,7 +15,7 @@ import { BarChart } from "react-native-chart-kit";
 class Statistiques extends React.Component {
   constructor() {
     super();
-    this.state = {}
+    this.state = {};
   }
 
   // Fonction qui permet de récupérer les statistiques depuis l'API
@@ -98,10 +98,7 @@ class Statistiques extends React.Component {
             labels: json.payload.map(subreddit => subreddit.name),
             datasets: [
               {
-                data: json.payload.map(
-                  subreddit =>
-                    subreddit.incomingLinkCount
-                )
+                data: json.payload.map(subreddit => subreddit.incomingLinkCount)
               }
             ]
           }
@@ -123,10 +120,7 @@ class Statistiques extends React.Component {
             labels: json.payload.map(subreddit => subreddit.name),
             datasets: [
               {
-                data: json.payload.map(
-                  subreddit =>
-                    subreddit.outgoingLinkCount
-                )
+                data: json.payload.map(subreddit => subreddit.outgoingLinkCount)
               }
             ]
           }
@@ -194,14 +188,13 @@ class Statistiques extends React.Component {
                 <ActivityIndicator size="large" color="#0000ff" />
               )}
             </View>
-            {/* TODO virer le false et faire les autre graphs*/}
-              <View style={styles.box}>
-                <Text style={styles.title}>
-                  Subreddits avec le plus de liens entrant
-                </Text>
+            <View style={styles.box}>
+              <Text style={styles.title}>
+                Subreddits avec le plus de liens entrant
+              </Text>
 
-                {/* Graphe pour montrer les subreddits avec le plus de liens entrant */}
-                {incoming ? (
+              {/* Graphe pour montrer les subreddits avec le plus de liens entrant */}
+              {incoming ? (
                 <BarChart
                   style={styles.chart}
                   data={incoming}
@@ -222,15 +215,15 @@ class Statistiques extends React.Component {
                     }
                   }}
                 />
-                ) : (
-                  <ActivityIndicator size="large" color="#0000ff" />
-                )}
-                <Text style={styles.title}>
-                  Subreddits avec le plus de liens sortant
-                </Text>
+              ) : (
+                <ActivityIndicator size="large" color="#0000ff" />
+              )}
+              <Text style={styles.title}>
+                Subreddits avec le plus de liens sortant
+              </Text>
 
-                {/* Graphe pour montrer les subreddits avec le plus de liens sortant */}
-                {outgoing ? (
+              {/* Graphe pour montrer les subreddits avec le plus de liens sortant */}
+              {outgoing ? (
                 <BarChart
                   style={styles.chart}
                   data={outgoing}
@@ -250,10 +243,10 @@ class Statistiques extends React.Component {
                     }
                   }}
                 />
-                ) : (
-                  <ActivityIndicator size="large" color="#0000ff" />
-                )}
-              </View>
+              ) : (
+                <ActivityIndicator size="large" color="#0000ff" />
+              )}
+            </View>
           </View>
         </ScrollView>
       </React.Fragment>
