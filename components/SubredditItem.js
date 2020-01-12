@@ -4,16 +4,9 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 class SubredditItem extends React.Component {
     render() {
         return (
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', { subreddit: item })}>
-                <View style={styles.subreddit_container}>
-                    {/* Lien vers l'image (logo de reddit) */}
-                    <Image style={styles.image} source={require('../assets/reddit.png')}/>
-                    <View style={styles.name_container}>
-                        {/* Nom du subreddit */}
-                        <Text style={styles.name}>{item._fields[0]}</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
+            <View style={styles.main_container}>
+                <Text style={styles.title_text}>Nom du subreddit</Text>
+            </View>
         )
     }
 }
