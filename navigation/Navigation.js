@@ -53,7 +53,7 @@ const SearchStack = createStackNavigator(
 export default createAppContainer(createBottomTabNavigator(
   {
     Recherche: { screen: SearchStack },
-    Statistiques: { screen: StatisticsScreen },
+    Statistiques: { screen: StatisticsScreen }
   },
   {
     tabBarOptions: {

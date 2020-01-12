@@ -74,7 +74,6 @@ class Statistiques extends React.Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
         this.setState({
           total: {
             labels: json.payload.map(subreddit => subreddit.name),
@@ -101,7 +100,6 @@ class Statistiques extends React.Component {
       <React.Fragment>
         <ScrollView style={styles.main_container}>
           <View>
-            {console.log("subR: " + this.state.total)}
             {/* Partie du bilan statistique */}
 
             <View style={styles.box}>
