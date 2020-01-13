@@ -13,7 +13,8 @@ import SubredditItem from "./SubredditItem";
 const KEY_TO_FILTER = "_fields[0]";
 
 class Search extends React.Component {
-  // Définit la variable searchTerm comme étant à réévaluer à chaque fois qu'elle est modifiée
+  // Définit la variable partialName comme étant à réévaluer à chaque fois qu'elle est modifiée
+  // et la variable subreddits contient les subreddits recherchés
   constructor(props) {
     super(props);
     this.state = {
@@ -22,17 +23,7 @@ class Search extends React.Component {
     };
   }
 
-  // Fonction qui récupère les subreddits en fonction du texte tapé
-  _loadSubreddits() {
-    if (this.state.searchedText.length > 0) {
-      // Seulement si le texte recherché n'est pas vide
-      getSubredditsWithSearch(this.state.searchedText).then(data => {
-        this.setState({ subreddits: data.results });
-      });
-    }
-  }
-
-  // Fonction qui réévalue la variable searchTerm
+  // Fonction qui réévalue la variable partialName
   handleNameChange = partialName => {
     clearTimeout(this.state.apiCallTimer);
     const apiCallTimer = setTimeout(() => {
@@ -42,6 +33,7 @@ class Search extends React.Component {
     this.setState({ partialName, apiCallTimer });
   };
 
+  // Fonction qui récupère les subreddits en fonction du texte tapé
   fetchSubreddit = async partialName => {
     this.setState({ isLoading: true });
     const response = await fetch(
@@ -70,7 +62,7 @@ class Search extends React.Component {
         />
         <Text style={styles.title}>Liste des Subreddits</Text>
 
-        {/*Affiche la liste des subreddi*/}
+        {/*Affiche la liste des subreddits*/}
         {!this.state.isLoading && !!this.state.subreddits.length && (
           <FlatList
             data={this.state.subreddits}
