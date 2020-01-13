@@ -21,6 +21,7 @@ export default ({ navigation }) => {
   console.log(subreddit.incomingLinkCount)
   const { incomingLinkCount, outgoingLinkCount } = subreddit;
 
+  // Récupération des subreddits depuis l'API
   const fetchSubreddit = async () => {
     setLoading(true);
     const response = await fetch(
@@ -34,7 +35,7 @@ export default ({ navigation }) => {
     const json = await response.json();
     setSubreddit(json.payload[0]);
 
-    //fetching linked subreddits
+    // Récupération des subreddits liés
     const responseLinked = await fetch(
       `http://134.209.90.92:3200/subreddit/linkedTo?name=${name}`,
       { method: "GET" }
